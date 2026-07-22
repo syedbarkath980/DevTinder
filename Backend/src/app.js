@@ -65,13 +65,13 @@ app.delete("/user", async (req, res) => {
 })
 
 
-// API - UPDATE a user by using user id
+// API - PATCH a user by using user id
 app.patch("/user", async (req, res) => {
     try {
         const userId = req.body.userId
         const data = req.body
 
-        await User.findByIdAndUpdate(userId, data )
+        await User.findByIdAndUpdate(userId, data, { runvalidators: true })
         res.status(200).send("User Updated Successfully!")
         console.log("Succeeded")
     }
