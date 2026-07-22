@@ -4,6 +4,7 @@ import User from "./models/user.js"
 
 const app = express()
 
+// Reads JSON data from requests to make sure req.body is readable
 app.use(express.json())
 
 
@@ -49,6 +50,33 @@ app.get("/feed", async (req, res) => {
         res.status(200).send(user)
     } catch (err) {
         console.log("Error Fetching the Feed")
+    }
+})
+
+// API - DELETE a user by using ID
+app.delete("/user", async (req, res) => {
+    try {
+        const userId = req.body.userId
+        await User.findByIdAndDelete(userId)
+        res.status(200).send("User deleted Successfully!")
+    } catch (err) {
+        console.log("Error deleting USER")
+    }
+})
+
+
+// API - UPDATE a user by using user id
+app.patch("/user", async (req, res) => {
+    try {
+        const userId = req.body.userId
+        const data = req.body
+
+        await User.findByIdAndUpdate(userId, data )
+        res.status(200).send("User Updated Successfully!")
+        console.log("Succeeded")
+    }
+    catch (err) {
+        console.log("Error updating the user DATA!")
     }
 })
 
