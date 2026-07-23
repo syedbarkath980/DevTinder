@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import validator from "validator"
 const { Schema } = mongoose
 
 const userSchema = new Schema({
@@ -20,9 +21,8 @@ const userSchema = new Schema({
         required: true,
         unique: true,
         lowercase: true,
-        validate(email) {   // function for custom validation
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-            if (!emailRegex.test(email)) {
+        validate(email) {
+            if (!validator.isEmail(email)) {
                 throw new Error("Invalid email format")
             }
         },
@@ -32,8 +32,7 @@ const userSchema = new Schema({
         type: String,
         min: 8,
         validate(password) {
-            const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/
-            if (!passwordRegex.test(password)) {
+            if (!validator.isStrongPassword(password, { minLength: 8, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 0 })) {
                 throw new Error("Password must have uppercase, lowercase, digit, and be 8+ characters")
             }
         },
@@ -47,7 +46,7 @@ const userSchema = new Schema({
     gender: {
         type: String,
         validate (gender) {
-            if (!["male", "female", "other"].includes(gender.toLowerCase())) {
+            if (!validator.isIn(gender.toLowerCase(), ["male", "female", "other"])) {
                 throw new Error("Invalid Gender")
             }
         }
@@ -55,10 +54,20 @@ const userSchema = new Schema({
     photoUrl: {
         type: String,
         trim : true,
+        validate(photoUrl) {
+            if (photoUrl && !validator.isURL(photoUrl)) {
+                throw new Error("Invalid Photo URL")
+            }
+        },
         default : "https://img.magnific.com/premium-photo/cute-cartoon-robot-with-pastel-colors-happy-face_14117-791753.jpg?w=360"
     },
     skills: {
-        type : [String]
+        type : [String],
+        validate(skills) {
+            if (skills.length > 10) {
+                throw new Error("Skills cannot be more than 10")
+            }
+        }
     }
 }, { timestamps: true })
 

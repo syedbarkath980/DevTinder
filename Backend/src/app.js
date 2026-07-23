@@ -11,6 +11,13 @@ app.use(express.json())
 // API - Create a User
 app.post("/signup", async (req, res) => {
     try {
+        const ALLOWED_SIGNUP_FIELDS = ["firstName", "lastName", "email", "password", "age", "gender", "photoUrl", "skills"]
+        const isValidSignup = Object.keys(req.body).every((key) => ALLOWED_SIGNUP_FIELDS.includes(key))
+
+        if (!isValidSignup) {
+            throw new Error("INVALID SIGNUP DATA")
+        }
+
         const user = new User(req.body)
         await user.save()
 
@@ -66,17 +73,26 @@ app.delete("/user", async (req, res) => {
 
 
 // API - PATCH a user by using user id
-app.patch("/user", async (req, res) => {
+app.patch("/user/:userId", async (req, res) => {
     try {
-        const userId = req.body.userId
+        const ALLOWED_UPDATES = ["firstName", "lastName", "password", "gender", "photoUrl", "age", "skills"]
+
+        const userId = req.params.userId
         const data = req.body
 
-        await User.findByIdAndUpdate(userId, data, { runvalidators: true })
-        res.status(200).send("User Updated Successfully!")
-        console.log("Succeeded")
+        if (Object.keys(data).every((key) => ALLOWED_UPDATES.includes(key)) && (!data.skills || data.skills.length <= 10)) {
+            await User.findByIdAndUpdate(userId, data, { runValidators: true })
+            res.status(200).send("User Updated Successfully!")
+            console.log("Succeeded")
+        }
+        else {
+            throw new Error("CANNOT UPDATE EMAIL")
+        }
+
     }
     catch (err) {
-        console.log("Error updating the user DATA!")
+        res.send("UPDATE FAILED" + err)
+        console.log("Error updating the user DATA!")    
     }
 })
 
@@ -91,4 +107,3 @@ connectDB()
     .catch((err) => {
     console.log("Error connecting DATABASE!!!", err)
 })
-
