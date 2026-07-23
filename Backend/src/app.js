@@ -1,6 +1,8 @@
 import express from "express"
 import connectDB from "./config/database.js"
 import User from "./models/user.js"
+import validateData from "../helpers/validate.js"
+import bcrypt from "bcrypt"
 
 const app = express()
 
@@ -11,14 +13,26 @@ app.use(express.json())
 // API - Create a User
 app.post("/signup", async (req, res) => {
     try {
-        const ALLOWED_SIGNUP_FIELDS = ["firstName", "lastName", "email", "password", "age", "gender", "photoUrl", "skills"]
-        const isValidSignup = Object.keys(req.body).every((key) => ALLOWED_SIGNUP_FIELDS.includes(key))
 
-        if (!isValidSignup) {
-            throw new Error("INVALID SIGNUP DATA")
-        }
+        const {firstName, lastName, email, password, age, gender, photoUrl, skills} = req.body
 
-        const user = new User(req.body)
+        // Validation:
+        validateData(req)
+
+        // Password Hashing / Encrypting:
+        const hashedPassword = await bcrypt.hash(password, 10)
+
+        const user = new User({
+            firstName,
+            lastName,
+            email,
+            password: hashedPassword,
+            age,
+            gender,
+            photoUrl,
+            skills
+        })
+
         await user.save()
 
         res.status(201).send("Created User Successfully!")
