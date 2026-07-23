@@ -10,7 +10,7 @@ const app = express()
 app.use(express.json())
 
 
-// API - Create a User
+// API - POST for SIGNUP/Create a User
 app.post("/signup", async (req, res) => {
     try {
 
@@ -39,6 +39,30 @@ app.post("/signup", async (req, res) => {
     } catch (err) {
         console.error("Cant create a user!!!", err)
         res.status(400).send("cant create a user")
+    }
+})
+
+// API - POST for Login
+app.post("/login", async (req, res) => {
+    try {
+        const { email, password } = req.body
+        
+        const user = await User.findOne({email : email})
+        if (!user) {
+            throw new Error("Invalid Credentials")
+        }
+
+        const isUserExist = await bcrypt.compare(password, user.password)
+        console.log(isUserExist)
+        if (!isUserExist) {  
+            throw new Error("Invalid Credentials")
+        }
+        else {
+            res.status(200).send("User Logged in Successfully!")
+        }
+
+    } catch (error) {
+        res.status(400).send("ERROR: " + error.message)  // Prevents Information Leaking.
     }
 })
 
