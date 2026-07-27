@@ -14,34 +14,7 @@ connectionRequestRouter.post("/request/send/:status/:toUserid", userAuth, async 
         const toUserId = req.params.toUserid
 
 
-        const ALLOWED_STATUS = ["liked", "disliked"]
-
-        if (!ALLOWED_STATUS.includes(status)) {
-            throw new Error("Invalid Status Type...")
-        }
-        
-        const toUserExists = await User.findById(toUserId)
-
-        if (!toUserExists) {  
-            throw new Error("User does not Exist....")
-        }
-
-        const requestExist = await ConnectionRequest.findOne({
-            $or: [
-                {
-                    fromUserId,
-                    toUserId
-                },
-                {
-                    fromUserId: toUserId,
-                    toUserId: fromUserId
-                }
-            ]
-        })
-
-        if (requestExist){
-            throw new Error("Connection Request Already Exist...")
-        }
+        await ConnectionRequest.validateRequests(fromUserId, toUserId, status)
 
         const userConnection = new ConnectionRequest({
             fromUserId,
