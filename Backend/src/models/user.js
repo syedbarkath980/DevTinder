@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import validator from "validator"
+import jwt from "jsonwebtoken"
 const { Schema } = mongoose
 
 const userSchema = new Schema({
@@ -70,6 +71,16 @@ const userSchema = new Schema({
         }
     }
 }, { timestamps: true })
+
+userSchema.methods.getJWT = async function () {
+    const user = this
+
+    const userToken = await jwt.sign({ _id: user._id }, "Dev@Tinder12", {
+        expiresIn : '1d'
+    })
+
+    return userToken
+}
 
 const User = mongoose.model("Users", userSchema)
 

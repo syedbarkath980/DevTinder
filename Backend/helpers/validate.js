@@ -9,4 +9,17 @@ const validateData = (req) => {
 
 }
 
-export default validateData
+const isUpdatesAllowed = (data) => {
+     const ALLOWED_UPDATES =
+        ["firstName", "lastName", "gender", "photoUrl", "skills"]  // No E-MAIL and AGE
+            
+        
+    const isValidUpdates = (Object.keys(data).every((key) => ALLOWED_UPDATES.includes(key)))
+    
+    if (!isValidUpdates) {
+        throw new Error("Error Updating data...")
+    }
+}
+
+
+export {validateData, isUpdatesAllowed}
