@@ -20,7 +20,7 @@ const userSchema = new Schema({
     email: {
         type: String,
         required: true,
-        unique: true,
+        unique: true,   // auto creates an index.
         lowercase: true,
         validate(email) {
             if (!validator.isEmail(email)) {

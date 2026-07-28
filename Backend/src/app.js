@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser"   // library used for reading the cooki
 import authRouter from "./routers/authRouter.js"
 import profileRouter from "./routers/profileRouter.js"
 import connectionRequestRouter from "./routers/connectionRequestRouter.js"
+import connectionReviewRouter from "./routers/connectionsReviewRouter.js"
 
 
 const app = express()
@@ -20,6 +21,7 @@ app.use(cookieParser())
 app.use("/", authRouter)
 app.use("/", profileRouter)
 app.use("/", connectionRequestRouter)
+app.use("/", connectionReviewRouter)
 
 
 connectDB()

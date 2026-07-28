@@ -1,23 +1,27 @@
 import mongoose, { trusted } from "mongoose"
-import User from "./user"
+import User from "./user.js"
 const { Schema } = mongoose
 
 const connectionRequestSchema = new Schema({
     fromUserId: {
-        type : mongoose.Schema.Types.ObjectId
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref : "Users"  // creates a connection between two collection.
     },
     toUserId: {
-        type : mongoose.Schema.Types.ObjectId
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref : "Users"
     },
     status: {
         type : String,
         enum: {
-            values: ["liked", "disliked"],
+            values: ["liked", "disliked", "accept", "reject"],
             message : `{VALUES} is not valid status`
         },
         required : true
     }
-})  
+}, {timestamps : true})  
 
 
 connectionRequestSchema.statics.validateRequests = async function (fromUserId, toUserId, status) {
@@ -40,33 +44,32 @@ connectionRequestSchema.statics.validateRequests = async function (fromUserId, t
     }
 }
 
-connectionRequestSchema.pre("save", async function (next) {
-    try {
-        const existingRequest = await mongoose
-            .model("ConnectionRequest")
-            .findOne({
-                $or: [
-                    {
-                        fromUserId: this.fromUserId,
-                        toUserId: this.toUserId
-                    },
-                    {
-                        fromUserId: this.toUserId,
-                        toUserId: this.fromUserId
-                    }
-                ]
-            })
+connectionRequestSchema.pre("save", async function () {
+    if (!this.isNew) {
+        return
+    }
 
-        if (existingRequest) {
-            return next(new Error("Connection Request Already Exists"))
-        }
+    const existingRequest = await mongoose
+        .model("ConnectionRequest")
+        .findOne({
+            $or: [
+                {
+                    fromUserId: this.fromUserId,
+                    toUserId: this.toUserId
+                },
+                {
+                    fromUserId: this.toUserId,
+                    toUserId: this.fromUserId
+                }
+            ]
+        })
 
-        next()
-    } catch (err) {
-        next(err)
+    if (existingRequest) {
+        throw new Error("Connection Request Already Exists")
     }
 })
 
+connectionRequestSchema.index({fromUserId : 1, toUserId : 1})   // compound index
 
 const ConnectionRequest = mongoose.model("ConnectionRequest", connectionRequestSchema)
 
