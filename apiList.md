@@ -5,27 +5,23 @@
 - POST      /login   ✔️
 - POST      /logout  ✔️
 
+## profileRouter
+- GET     /profile  ✔️
+- DELETE  /profile/delete  ✔️
+- PATCH   /updateProfile  ✔️
+- PATCH   /updatePassword
+
+
+## ConnectionsRequestRouter
+- POST    /request/send/:status/:userid        (Status = liked | disliked)  ✔️
+- POST    /request/review/:status/:requestId   (Status = accept | reject)   ✔️
+
+
+## ConnectionsViewRouter
+- GET     /user/myConnections        ✔️ 
+- GET     /user/connetionRequests    ✔️ 
+
+
 ## userRouter
-- GET     /user/profile  ✔️
 - GET     /feed
-- GET     /user/messages
-- PATCH   /user/updateProfile  ✔️
-- PATCH   /user/updatePassword
-- DELETE  /profile  ✔️
-
-
-## ConnectionsRequestRouter:
-- POST    /request/send/:status/:userid        (Status can be either liked | disliked)  ✔️
-- POST    /request/review/:status/:requestId   (Status can be either accept | reject)   ✔️
-
-## Statuses Can Be:
-i.  on right swipe = liked
-ii. on left swipe = disliked
-iii. on received(liked) request = accepted
-iv. on received(liked) request = rejected
-
-
-## ConnectionsReviewRouter:
-- GET     /user/myConnections
-- GET     /user/connetionRequests 
 

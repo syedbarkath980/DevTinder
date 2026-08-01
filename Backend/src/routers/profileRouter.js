@@ -6,7 +6,7 @@ import { isUpdatesAllowed, validateData } from "../../helpers/validate.js"
 
 const profileRouter = express.Router()
 
-profileRouter.get("/user/profile", userAuth, async (req, res) => {
+profileRouter.get("/profile", userAuth, async (req, res) => {
     try {
         const user = req.user
         res.status(200).send(user)
@@ -16,7 +16,7 @@ profileRouter.get("/user/profile", userAuth, async (req, res) => {
     }
 })
 
-profileRouter.delete("/user/delete", userAuth, async (req, res) => {
+profileRouter.delete("/deleteProfile", userAuth, async (req, res) => {
     try {
         const user = req.user
         const userId = user._id
@@ -33,7 +33,7 @@ profileRouter.delete("/user/delete", userAuth, async (req, res) => {
     }
 })
 
-profileRouter.patch("/user/updateProfile", userAuth, async (req, res) => {
+profileRouter.patch("/updateProfile", userAuth, async (req, res) => {
     try {
         const userId = req.user._id
         const userData = req.body

@@ -2,12 +2,12 @@ import express from "express"
 import userAuth from "../middlewares/userAuth.js"
 import ConnectionRequest from "../models/connectionReq.js"
 
-const connectionReviewRouter = express.Router()
+const connectionsViewRouter = express.Router()
 
 const SAFE_DATA_DISPLAY = "firstName lastName age gender photoUrl skills"
 
 // Router for reviewing all the received requests to be accpeted or rejected
-connectionReviewRouter.get("/user/connectionRequests",
+connectionsViewRouter.get("/user/connectionRequests",
     userAuth,
     async (req, res) => {
         try {
@@ -33,7 +33,7 @@ connectionReviewRouter.get("/user/connectionRequests",
 })
 
 
-connectionReviewRouter.get("/user/myConnections",
+connectionsViewRouter.get("/user/myConnections",
     userAuth,
     async (req, res) => {
         try {
@@ -72,7 +72,7 @@ connectionReviewRouter.get("/user/myConnections",
 })
 
 
-export default connectionReviewRouter
+export default connectionsViewRouter
 
 // In the above connectionRequests how will i get the names of the users who sent the requests?
 
