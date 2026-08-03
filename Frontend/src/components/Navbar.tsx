@@ -15,12 +15,13 @@ const Navbar = () => {
           <div
             tabIndex={0}
             role="button"
-            className="btn btn-circle avatar -mt-6"
+            className="btn btn-circle avatar -mt-6 p-0"
           >
-            <div className="w-8 rounded-full overflow-hidden ">
+            <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-slate-100">
               <img
-                alt="Tailwind CSS Navbar component"
+                alt="User profile"
                 src="https://static.vecteezy.com/system/resources/previews/065/460/346/non_2x/simple-black-circle-person-icon-graphic-image-for-profile-pictures-and-user-interfaces-free-vector.jpg"
+                className="h-full w-full object-cover"
               />
             </div>
           </div>
