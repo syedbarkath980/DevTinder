@@ -1,7 +1,7 @@
 import express from "express"
 import userAuth from "../middlewares/userAuth.js"
 import User from "../models/user.js"
-import { isUpdatesAllowed, validateData } from "../../helpers/validate.js"
+import { isUpdatesAllowed, validateData } from "../helpers/validate.js"
 
 
 const profileRouter = express.Router()
