@@ -7,9 +7,9 @@ export interface SignupPayload {
   password: string;
 }
 
-export const signup = (data: SignupPayload) => api.post("/signup", data);
-
 export const login = (email: string, password: string) =>
   api.post("/login", { email, password });
+
+export const signup = (data: SignupPayload) => api.post("/signup", data);
 
 export const logout = () => api.post("/logout");

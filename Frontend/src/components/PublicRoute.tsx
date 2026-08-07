@@ -6,7 +6,7 @@ type UserState = {
   isAuthChecked: boolean;
 };
 
-function ProtectedRoute({ children }: { children: React.ReactNode }) {
+function PublicRoute({ children }: { children: React.ReactNode }) {
   const { user, isAuthChecked } = useSelector(
     (state: { user: UserState }) => state.user,
   );
@@ -15,11 +15,11 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
     return null;
   }
 
-  if (!user) {
-    return <Navigate to="/login" replace />;
+  if (user) {
+    return <Navigate to="/feed" replace />;
   }
 
   return children;
 }
 
-export default ProtectedRoute;
+export default PublicRoute;

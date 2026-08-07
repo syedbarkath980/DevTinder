@@ -1,40 +1,30 @@
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router";
 import logo from "../assets/dtl.png";
-import { login as loginApi } from "../api/auth";
-import { loginStart, loginSuccess, loginFailure } from "../store/authSlice";
-import axios from "axios";
+import { useState } from "react";
+import { login as LoginApi } from "../api/auth";
+import { useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
+import { addUser } from "../store/userSlice";
 
 const Login = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const [email, setEmail] = useState("adeeb@gmail.com");
+  const [password, setPassword] = useState("Syed@123#");
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleOnLogin = async () => {
-    setError("");
-    setLoading(true);
-    dispatch(loginStart());
-
     try {
-      const res = await loginApi(email, password);
-      dispatch(loginSuccess(res.data));
-      navigate("/feed");
-    } catch (err: unknown) {
-      let message = "Login failed";
-      if (axios.isAxiosError(err)) {
-        message = err.response?.data?.message ?? err.response?.data ?? message;
-      } else if (err instanceof Error) {
-        message = err.message;
+      const response = await LoginApi(email, password);
+
+      if (response) {
+        dispatch(addUser(response.data)); // Storing the data in store.
+        navigate("/feed", { replace: true });
+      } else {
+        throw new Error("Error Loggin in...");
       }
-      dispatch(loginFailure(message));
-      setError(message);
-    } finally {
-      setLoading(false);
+    } catch (error) {
+      console.log("Error: ", error);
     }
   };
 
@@ -88,8 +78,6 @@ const Login = () => {
               />
             </label>
 
-            {error && <p className="text-sm text-red-500">{error}</p>}
-
             <div className="flex items-center justify-between pt-1 text-xs text-slate-500">
               <label className="flex items-center gap-2">
                 <input
@@ -109,9 +97,8 @@ const Login = () => {
             <button
               className="mt-4 btn h-11 w-full rounded-md border-0 bg-blue-500 text-[16px] text-white hover:bg-blue-600"
               onClick={handleOnLogin}
-              disabled={loading}
             >
-              {loading ? "Logging in..." : "Login"}
+              Login
             </button>
 
             <button className="btn h-11 w-full rounded-md border border-slate-200 bg-white text-slate-700 hover:bg-slate-50">

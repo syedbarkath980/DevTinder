@@ -1,18 +1,29 @@
-import { useSelector, useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-import { logout } from "../store/authSlice";
-import { logout as logoutApi } from "../api/auth";
+import { Link, useNavigate } from "react-router";
 import logo from "../assets/dtl.png";
+import { useDispatch, useSelector } from "react-redux";
+import { logout as LogOutApi } from "../api/auth";
+import { removeUser } from "../store/userSlice";
+
+type UserState = {
+  user: {
+    firstName?: string;
+  } | null;
+};
 
 const Navbar = () => {
-  const user = useSelector((state: any) => state.auth.user);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const user = useSelector((state: { user: UserState }) => state.user.user);
 
-  const handleLogout = async () => {
-    await logoutApi();
-    dispatch(logout());
-    navigate("/login");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleLogOut = async () => {
+    try {
+      await LogOutApi();
+      navigate("/", { replace: true });
+      dispatch(removeUser());
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -42,7 +53,7 @@ const Navbar = () => {
               <Link to="/profile">Profile</Link>
             </li>
             <li>
-              <button onClick={handleLogout}>Logout</button>
+              <button onClick={handleLogOut}>Logout</button>
             </li>
           </ul>
         </div>

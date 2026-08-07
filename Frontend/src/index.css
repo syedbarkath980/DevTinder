@@ -1,5 +1,8 @@
 @import "tailwindcss";
 @plugin "daisyui";
+
 @plugin "daisyui" {
-  themes: fantasy --default, dark; 
+  themes:
+    fantasy --default,
+    dark;
 }

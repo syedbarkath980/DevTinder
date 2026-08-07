@@ -1,9 +1,8 @@
-// src/pages/LandingPage.tsx
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { useSelector } from "react-redux";
 
 function LandingPage() {
-  const user = useSelector((state: any) => state.auth.user);
+  const user = useSelector((state: any) => state.user.user);
 
   return (
     <div className="hero min-h-screen bg-base-200">
